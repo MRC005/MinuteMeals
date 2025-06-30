@@ -1,0 +1,64 @@
+.dashboard-widget {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px 32px;
+  border-radius: 18px;
+  background: linear-gradient(120deg, #fff 60%, #f7f3ff 100%);
+  box-shadow: 0 4px 24px rgba(127, 63, 247, 0.07);
+  min-width: 220px;
+  min-height: 110px;
+  transition: transform 0.15s, box-shadow 0.15s;
+  cursor: pointer;
+  border: none;
+}
+
+.dashboard-widget:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 8px 32px rgba(127, 63, 247, 0.16);
+}
+
+.widget-icon {
+  font-size: 2.8rem;
+  border-radius: 50%;
+  padding: 16px;
+  background: #f2f4ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+
+.widget-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.widget-label {
+  font-size: 1rem;
+  color: #888;
+  letter-spacing: 0.5px;
+}
+
+.widget-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #21063e;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 600px) {
+  .dashboard-widget {
+    min-width: 140px;
+    padding: 16px 12px;
+    gap: 10px;
+  }
+  .widget-icon {
+    font-size: 1.6rem;
+    padding: 8px;
+  }
+  .widget-value {
+    font-size: 1.2rem;
+  }
+}

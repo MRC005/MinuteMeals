@@ -1,0 +1,66 @@
+.recent-orders {
+  margin-top: 40px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(127,63,247,0.07);
+  padding: 24px;
+}
+
+.recent-orders h2 {
+  margin-bottom: 16px;
+  color: #21063e;
+  font-size: 1.3rem;
+}
+
+.recent-orders table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.recent-orders th, .recent-orders td {
+  padding: 12px 8px;
+  text-align: left;
+  font-size: 1rem;
+}
+
+.recent-orders th {
+  background: #fafaff;
+  color: #7F3FF7;
+  font-weight: 600;
+}
+
+.recent-orders tr:not(:last-child) {
+  border-bottom: 1px solid #eee;
+}
+
+.status {
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+.status.delivered {
+  background: #e0ffe8;
+  color: #00b894;
+}
+.status.pending {
+  background: #fff6e0;
+  color: #fd7e14;
+}
+.status.cancelled {
+  background: #ffe7e0;
+  color: #e17055;
+}
+
+.mark-btn {
+  background: #7F3FF7;
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.mark-btn:hover {
+  background: #21063e;
+}
