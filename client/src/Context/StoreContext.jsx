@@ -1,5 +1,5 @@
-import { createContext, useEffect, useState } from "react"
-import axios from "axios"
+import { createContext, useEffect, useState } from "react";
+import axios from "axios";
 
 export const StoreContext = createContext(null);
 
@@ -18,9 +18,7 @@ const StoreContextProvider = ({ children }) => {
         if (authToken) {
             try {
                 await axios.post(`${API_BASE_URL}/api/cart/add`, { itemId: foodId }, { headers: { token: authToken } });
-            } catch (error) {
-                console.error("Failed to add to cart:", error);
-            }
+            } catch (error) {}
         }
     };
 
@@ -32,13 +30,11 @@ const StoreContextProvider = ({ children }) => {
         if (authToken) {
             try {
                 await axios.post(`${API_BASE_URL}/api/cart/remove`, { itemId: foodId }, { headers: { token: authToken } });
-            } catch (error) {
-                console.error("Failed to remove from cart:", error);
-            }
+            } catch (error) {}
         }
     };
 
-    const getCartTotal = () => {
+    const getTotalCartAmount = () => {
         return Object.entries(cart).reduce((sum, [id, qty]) => {
             const food = menu.find(item => item._id === id);
             return food ? sum + food.price * qty : sum;
@@ -49,18 +45,14 @@ const StoreContextProvider = ({ children }) => {
         try {
             const res = await axios.get(`${API_BASE_URL}/api/food/list`);
             setMenu(res.data.data);
-        } catch (error) {
-            console.error("Failed to fetch menu:", error);
-        }
+        } catch (error) {}
     };
 
     const fetchCart = async (token) => {
         try {
             const res = await axios.post(`${API_BASE_URL}/api/cart/get`, {}, { headers: { token } });
             setCart(res.data.cartData || {});
-        } catch (error) {
-            console.error("Failed to load cart:", error);
-        }
+        } catch (error) {}
     };
 
     useEffect(() => {
@@ -81,7 +73,7 @@ const StoreContextProvider = ({ children }) => {
         setCart,
         addItemToCart,
         removeItemFromCart,
-        getCartTotal
+        getTotalCartAmount
     };
 
     return (
