@@ -15,7 +15,7 @@ const FoodItem = ({
   category,
   rating = 4.2,
   isBestSeller = false,
-  isVeg = true,
+  isVeg,
   offer = null
 }) => {
   const { cartItems, addToCart, removeFromCart, url } = useContext(StoreContext)
@@ -39,27 +39,43 @@ const FoodItem = ({
   return (
     <div className={`food-item${added ? ' food-item-animate' : ''}${stock === 0 ? ' food-item-out' : ''}`}>
       <div className="food-item-image-container">
-        <img
-          className={`food-item-image${imgLoaded ? ' loaded' : ''}`}
-          src={url + "/images/" + image}
-          alt={name}
-          loading="lazy"
-          onLoad={() => setImgLoaded(true)}
-          style={{ filter: imgLoaded ? 'none' : 'blur(10px)', transition: 'filter 0.4s' }}
-        />
         {isBestSeller && <span className="food-item-badge best-seller">Best Seller</span>}
-        {offer && <span className="food-item-badge offer">{offer}</span>}
-        <span className={`food-item-badge veg-type ${isVeg ? 'veg' : 'nonveg'}`}>{isVeg ? 'Veg' : 'Non-Veg'}</span>
         {category && <span className="food-item-cat">{category}</span>}
         <button
           className={`food-item-fav ${favorite ? 'active' : ''}`}
           aria-label="Toggle favorite"
           onClick={() => setFavorite(f => !f)}
         >
-          <svg viewBox="0 0 24 24" width="22" height="22" fill={favorite ? "#e74c3c" : "none"} stroke="#e74c3c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 21s-6.5-5.5-9-9.1C-1.5 7.5 2.5 2.5 7 5.1c1.7 1 3 2.9 3 2.9s1.3-1.9 3-2.9c4.5-2.6 8.5 2.4 4 6.8C18.5 15.5 12 21 12 21z"/>
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill={favorite ? "#e74c3c" : "#fff"}
+            stroke="#e74c3c"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            style={{ display: 'block' }}
+          >
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+                     2 5.42 4.42 3 7.5 3c1.74 0 3.41 1.01 4.5 2.09
+                     C13.09 4.01 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5
+                     c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
           </svg>
         </button>
+        <img
+          className={`food-item-image${imgLoaded ? ' loaded' : ''}`}
+          src={url + "/uploads/images/" + image}
+          alt={name}
+          loading="lazy"
+          onLoad={() => setImgLoaded(true)}
+          style={{ filter: imgLoaded ? 'none' : 'blur(10px)', transition: 'filter 0.4s' }}
+        />
+        {(isVeg === true || isVeg === false || isVeg === "true" || isVeg === "false") && (
+          <span className={`food-item-badge veg-type ${(isVeg === true || isVeg === "true") ? 'veg' : 'nonveg'}`}>
+            {(isVeg === true || isVeg === "true") ? 'Veg' : 'Non-Veg'}
+          </span>
+        )}
         {!cartItems[id] ? (
           <img
             className={`add${stock === 0 ? ' disabled' : ''}`}
@@ -93,9 +109,9 @@ const FoodItem = ({
           <span className="food-item-rating">{renderStars(rating)} {rating?.toFixed(1)}</span>
         </div>
         <p className="food-item-desc">{description}</p>
-        <div className="food-item-price-rating">
+        <div className="food-item-price-row">
           <p className="food-item-price">₹{price}</p>
-          <img src={assets.rating_starts} alt="Rating" />
+          {offer && <span className="food-item-offer-inline">{offer}</span>}
         </div>
       </div>
     </div>

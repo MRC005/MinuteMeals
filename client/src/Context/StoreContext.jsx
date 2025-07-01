@@ -6,36 +6,26 @@ export const StoreContext = createContext(null);
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
 const StoreContextProvider = ({ children }) => {
-    const [authToken, setAuthToken] = useState("");
-    const [cart, setCart] = useState({});
+    const [token, setToken] = useState("");
+    const [cartItems, setCartItems] = useState({});
     const [menu, setMenu] = useState([]);
 
-    const addItemToCart = async (foodId) => {
-        setCart(prev => ({
+    const addToCart = (foodId) => {
+        setCartItems(prev => ({
             ...prev,
             [foodId]: prev[foodId] ? prev[foodId] + 1 : 1
         }));
-        if (authToken) {
-            try {
-                await axios.post(`${API_BASE_URL}/api/cart/add`, { itemId: foodId }, { headers: { token: authToken } });
-            } catch (error) {}
-        }
     };
 
-    const removeItemFromCart = async (foodId) => {
-        setCart(prev => ({
+    const removeFromCart = (foodId) => {
+        setCartItems(prev => ({
             ...prev,
             [foodId]: prev[foodId] > 1 ? prev[foodId] - 1 : 0
         }));
-        if (authToken) {
-            try {
-                await axios.post(`${API_BASE_URL}/api/cart/remove`, { itemId: foodId }, { headers: { token: authToken } });
-            } catch (error) {}
-        }
     };
 
     const getTotalCartAmount = () => {
-        return Object.entries(cart).reduce((sum, [id, qty]) => {
+        return Object.entries(cartItems).reduce((sum, [id, qty]) => {
             const food = menu.find(item => item._id === id);
             return food ? sum + food.price * qty : sum;
         }, 0);
@@ -45,34 +35,25 @@ const StoreContextProvider = ({ children }) => {
         try {
             const res = await axios.get(`${API_BASE_URL}/api/food/list`);
             setMenu(res.data.data);
-        } catch (error) {}
-    };
-
-    const fetchCart = async (token) => {
-        try {
-            const res = await axios.post(`${API_BASE_URL}/api/cart/get`, {}, { headers: { token } });
-            setCart(res.data.cartData || {});
-        } catch (error) {}
+        } catch (error) {
+            setMenu([]);
+        }
     };
 
     useEffect(() => {
         fetchMenu();
         const storedToken = localStorage.getItem("token");
-        if (storedToken) {
-            setAuthToken(storedToken);
-            fetchCart(storedToken);
-        }
+        if (storedToken) setToken(storedToken);
     }, []);
 
+    const url = API_BASE_URL;
+
     const contextValue = {
-        authToken,
-        setAuthToken,
-        API_BASE_URL,
-        menu,
-        cart,
-        setCart,
-        addItemToCart,
-        removeItemFromCart,
+        token, setToken,
+        url,
+        menu, // <--- THIS IS THE ARRAY OF FOOD ITEMS
+        cartItems, setCartItems,
+        addToCart, removeFromCart,
         getTotalCartAmount
     };
 

@@ -4,13 +4,19 @@ import FoodItem from '../FoodItem/FoodItem';
 import './FoodDisplay.css';
 
 const FoodDisplay = ({ category }) => {
-  const { food_list = [] } = useContext(StoreContext);
+  const { menu = [] } = useContext(StoreContext);
+
+  if (menu && menu.length > 0) {
+    console.log('menu item example:', menu[0]);
+  } else {
+    console.log('menu is empty or undefined:', menu);
+  }
 
   return (
     <div className='food-display' id='food-display'>
       <h2>Top dishes near you</h2>
       <div className='food-display-list'>
-        {(food_list || [])
+        {(menu || [])
           .filter(food => category === "All" || food.category === category)
           .map(food => (
             <FoodItem

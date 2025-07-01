@@ -66,7 +66,7 @@ const Header = () => {
                 </p>
                 <button
                     className="header-btn"
-                    onClick={() => document.getElementById('explore-menu').scrollIntoView({ behavior: 'smooth' })}
+                    onClick={() => document.getElementById('explore-menu')?.scrollIntoView({ behavior: 'smooth' })}
                     aria-label="View Menu"
                 >
                     View Menu

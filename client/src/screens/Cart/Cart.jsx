@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { assets } from '../../assets/assets';
 
 const Cart = () => {
-  const { cartItems, food_list, removeFromCart, getTotalCartAmount, url, addToCart } = useContext(StoreContext);
+  const { cartItems, menu, removeFromCart, getTotalCartAmount, url, addToCart } = useContext(StoreContext);
   const navigate = useNavigate();
   const [promo, setPromo] = useState("");
   const [promoApplied, setPromoApplied] = useState(false);
@@ -34,7 +34,7 @@ const Cart = () => {
     navigate('/order');
   };
 
-  const cartItemsList = food_list.filter(food => cartItems[food._id] > 0);
+  const cartItemsList = menu.filter(food => cartItems[food._id] > 0);
 
   return (
     <div className="cart">
@@ -53,13 +53,24 @@ const Cart = () => {
           <div className="cart-empty">
             <img src={assets.basket_icon} alt="Empty cart" />
             <p>Your cart is empty. Add some delicious food!</p>
-            <button onClick={() => window.location.href = "/#explore-menu"}>Browse Menu</button>
+            <button
+              type="button"
+              onClick={() => {
+                navigate('/');
+                setTimeout(() => {
+                  const el = document.getElementById('explore-menu');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+              }}
+            >
+              Browse Menu
+            </button>
           </div>
         ) : (
           cartItemsList.map((food) => (
             <React.Fragment key={food._id}>
               <div className="cart-items-title cart-items-item">
-                <img className="food-image" src={url + "/images/" + food.image} alt={food.name} />
+                <img className="food-image" src={url + "/uploads/images/" + food.image} alt={food.name} />
                 <p>{food.name}</p>
                 <p>₹{food.price}</p>
                 <p>{cartItems[food._id]}</p>
@@ -104,6 +115,7 @@ const Cart = () => {
             </div>
           </div>
           <button
+            type="button"
             onClick={handleProceed}
             disabled={subtotal === 0}
             aria-disabled={subtotal === 0}
@@ -124,9 +136,9 @@ const Cart = () => {
               aria-label="Promo code"
             />
             <button
+              type="button"
               onClick={handlePromoApply}
               disabled={promoApplied}
-              type="button"
             >
               {promoApplied ? "Applied" : "Apply"}
             </button>
