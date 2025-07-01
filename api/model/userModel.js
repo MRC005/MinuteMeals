@@ -5,3 +5,5 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     cartData: { type: Object, default: {} }
 }, { minimize: false });
+
+module.exports = mongoose.model('User', userSchema);

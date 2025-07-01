@@ -10,6 +10,22 @@ const StoreContextProvider = ({ children }) => {
     const [cartItems, setCartItems] = useState({});
     const [menu, setMenu] = useState([]);
 
+    useEffect(() => {
+        const storedCart = localStorage.getItem('cartItems');
+        if (storedCart) setCartItems(JSON.parse(storedCart));
+        
+        const storedToken = localStorage.getItem('token');
+        if (storedToken) setToken(storedToken);
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    }, [cartItems]);
+
+    useEffect(() => {
+        if (token) localStorage.setItem('token', token);
+    }, [token]);
+
     const addToCart = (foodId) => {
         setCartItems(prev => ({
             ...prev,
@@ -42,8 +58,6 @@ const StoreContextProvider = ({ children }) => {
 
     useEffect(() => {
         fetchMenu();
-        const storedToken = localStorage.getItem("token");
-        if (storedToken) setToken(storedToken);
     }, []);
 
     const url = API_BASE_URL;
@@ -51,7 +65,7 @@ const StoreContextProvider = ({ children }) => {
     const contextValue = {
         token, setToken,
         url,
-        menu, // <--- THIS IS THE ARRAY OF FOOD ITEMS
+        menu,
         cartItems, setCartItems,
         addToCart, removeFromCart,
         getTotalCartAmount

@@ -1,26 +1,40 @@
 const orderModel = require('../model/orderModel');
+const userModel = require('../model/userModel');
 
 const getStats = async (req, res) => {
   try {
-    const totalOrders = await orderModel.countDocuments();
-    const totalRevenueResult = await orderModel.aggregate([
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+    
+    const ordersToday = await orderModel.countDocuments({
+      createdAt: { $gte: startOfToday },
+      payment: true
+    });
+    
+    const activeUsers = await userModel.countDocuments();
+    
+    const revenueAgg = await orderModel.aggregate([
+      { 
+        $match: { 
+          createdAt: { $gte: startOfToday },
+          payment: true 
+        } 
+      },
       { $group: { _id: null, total: { $sum: "$amount" } } }
     ]);
-    const totalRevenue = totalRevenueResult[0]?.total || 0;
     
-    const popularFoods = await orderModel.aggregate([
-      { $unwind: "$items" },
-      { $group: { _id: "$items.name", count: { $sum: "$items.quantity" } } },
-      { $sort: { count: -1 } },
-      { $limit: 5 }
-    ]);
-
+    const revenue = revenueAgg[0]?.total || 0;
+    
     res.json({ 
       success: true, 
-      data: { totalOrders, totalRevenue, popularFoods } 
+      data: { 
+        ordersToday,
+        activeUsers,
+        restaurants: 1,
+        revenue
+      } 
     });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ success: false, message: "Error fetching dashboard stats" });
   }
 };

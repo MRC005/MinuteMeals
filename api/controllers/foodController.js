@@ -20,7 +20,6 @@ const addFood = async (req, res) => {
         });
         res.status(201).json({ success: true, message: "Food added" });
     } catch (error) {
-        console.log('Add Food Error:', error);
         res.status(500).json({ success: false, message: "Error adding food" });
     }
 };
@@ -30,14 +29,13 @@ const listFood = async (req, res) => {
         const foods = await foodModel.find();
         res.status(200).json({ success: true, data: foods });
     } catch (error) {
-        console.log('List Food Error:', error);
         res.status(500).json({ success: false, message: "Error fetching foods" });
     }
 };
 
 const removeFood = async (req, res) => {
     try {
-        const { id } = req.params;  // Changed from req.query to req.params
+        const { id } = req.params;
         const food = await foodModel.findById(id);
         if (!food) return res.status(404).json({ success: false, message: "Food not found" });
 
@@ -53,7 +51,6 @@ const removeFood = async (req, res) => {
         await foodModel.findByIdAndDelete(id);
         res.status(200).json({ success: true, message: "Food deleted successfully" });
     } catch (error) {
-        console.log('Remove Food Error:', error);
         res.status(500).json({ success: false, message: "Error deleting food" });
     }
 };

@@ -16,8 +16,13 @@ const Verify = () => {
     useEffect(() => {
         const verifyPayment = async () => {
             try {
-                const response = await axios.post(url + "/api/order/verify", { success, orderId });
+                const response = await axios.post(url + "/api/order/verify", { 
+                  success, 
+                  orderId 
+                });
+                
                 if (response.data.success) {
+                    localStorage.removeItem('cartItems');
                     navigate("/myorders");
                 } else {
                     setError("Payment verification failed. Redirecting to home...");
@@ -28,7 +33,10 @@ const Verify = () => {
                 setTimeout(() => navigate("/"), 2500);
             }
         };
-        verifyPayment();
+        
+        if (success && orderId) {
+            verifyPayment();
+        }
     }, [success, orderId, url, navigate]);
 
     if (error) {
@@ -46,4 +54,4 @@ const Verify = () => {
     );
 }
 
-export default Verify
+export default Verify;

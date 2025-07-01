@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/Loader";
 
 const PlaceOrder = () => {
-  const { getTotalCartAmount, food_list, cartItems, url, token } = useContext(StoreContext);
+  const { getTotalCartAmount, menu, cartItems, url, token } = useContext(StoreContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -45,23 +45,41 @@ const PlaceOrder = () => {
     e.preventDefault();
     if (!validate()) return;
     setLoading(true);
+
     let orderItems = [];
-    food_list.forEach((item) => {
-      if (cartItems[item._id] > 0) {
-        orderItems.push({ ...item, quantity: cartItems[item._id] });
+    (menu || []).forEach((item) => {
+      if (cartItems[String(item._id)] > 0) {
+        orderItems.push({ ...item, quantity: cartItems[String(item._id)] });
       }
     });
+
+    if (orderItems.length === 0) {
+      setError("Your cart is empty.");
+      setLoading(false);
+      return;
+    }
+
     let orderData = {
       address: data,
       items: orderItems,
       amount: getTotalCartAmount() + 20
     };
+
     try {
-      let response = await axios.post(url + "/api/order/place", orderData, { headers: { token } });
+      let response = await axios.post(
+        url + "/api/order/place",
+        orderData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       const { session_url } = response.data;
-      window.location.replace(session_url);
+      if (session_url) {
+        window.location.replace(session_url);
+      } else {
+        setError("Payment failed. Please try again.");
+        setLoading(false);
+      }
     } catch (err) {
-      setError("Payment failed. Please try again.");
+      setError(err.response?.data?.message || "Payment failed. Please try again.");
       setLoading(false);
     }
   };

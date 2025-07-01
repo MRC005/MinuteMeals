@@ -1,12 +1,9 @@
 const orderModel = require('../model/orderModel');
 const userModel = require('../model/userModel');
 const Stripe = require('stripe');
-
 const stripe = new Stripe(process.env.SK_SECRET);
 
-const frontend_url = process.env.NODE_ENV === 'production' 
-  ? 'https://your-frontend-url.com' 
-  : 'http://localhost:5173';
+const frontend_url = process.env.FRONTEND_URL || 'http://localhost:5173';
 
 const placeOrder = async (req, res) => {
   try {
@@ -50,7 +47,6 @@ const placeOrder = async (req, res) => {
 
     res.status(200).json({ success: true, session_url: session.url });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ success: false, message: "Error placing order" });
   }
 };
@@ -76,7 +72,6 @@ const verifyOrder = async (req, res) => {
       res.json({ success: false, message: "Payment cancelled" });
     }
   } catch (error) {
-    console.log(error);
     res.status(500).json({ success: false, message: "Error verifying order" });
   }
 };
@@ -86,17 +81,15 @@ const userOrders = async (req, res) => {
     const orders = await orderModel.find({ userId: req.user.id });
     res.json({ success: true, data: orders });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ success: false, message: "Error fetching orders" });
   }
 };
 
 const listOrders = async (req, res) => {
   try {
-    const orders = await orderModel.find();
+    const orders = await orderModel.find().sort({ createdAt: -1 }).limit(5);
     res.json({ success: true, data: orders });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ success: false, message: "Error fetching orders" });
   }
 };
@@ -106,7 +99,6 @@ const updateState = async (req, res) => {
     await orderModel.findByIdAndUpdate(req.body.orderId, { status: req.body.status });
     res.json({ success: true, message: "Order status updated" });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ success: false, message: "Error updating status" });
   }
 };

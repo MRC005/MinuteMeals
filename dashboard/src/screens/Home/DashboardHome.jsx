@@ -4,13 +4,15 @@ import RecentOrders from '../../components/RecentOrders/RecentOrders'
 import { FaShoppingCart, FaUser, FaStore, FaRupeeSign } from 'react-icons/fa'
 import axios from 'axios'
 
+const API_BASE_URL = 'http://localhost:4000'
+
 export default function DashboardHome() {
   const [orders, setOrders] = useState([])
   const [stats, setStats] = useState({
     ordersToday: 0,
     activeUsers: 0,
     restaurants: 0,
-    revenue: 0,
+    revenue: 0
   })
   const [loading, setLoading] = useState(true)
 
@@ -18,13 +20,15 @@ export default function DashboardHome() {
     async function fetchDashboardData() {
       try {
         const [statsRes, ordersRes] = await Promise.all([
-          axios.get('https://your-backend-url/api/dashboard-stats'),
-          axios.get('https://your-backend-url/api/orders/recent'),
+          axios.get(`${API_BASE_URL}/api/dashboard/stats`),
+          axios.get(`${API_BASE_URL}/api/order/list`)
         ])
-        setStats(statsRes.data)
-        setOrders(ordersRes.data)
+        
+        if (statsRes.data.success) setStats(statsRes.data.data)
+        if (ordersRes.data.success) setOrders(ordersRes.data.data)
       } catch (err) {
-        console.error('Failed to fetch dashboard data:', err)
+        setStats({ ordersToday: 0, activeUsers: 0, restaurants: 0, revenue: 0 })
+        setOrders([])
       } finally {
         setLoading(false)
       }
@@ -33,7 +37,7 @@ export default function DashboardHome() {
   }, [])
 
   return (
-    <div>
+    <div style={{ padding: 24 }}>
       <div style={{
         display: 'flex',
         gap: 32,
