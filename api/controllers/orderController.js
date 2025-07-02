@@ -3,7 +3,7 @@ const userModel = require('../model/userModel');
 const Stripe = require('stripe');
 const stripe = new Stripe(process.env.SK_SECRET);
 
-const frontend_url = process.env.FRONTEND_URL || 'http://localhost:5173';
+const frontend_url = process.env.FRONTEND_URL || 'http://localhost:5174';
 
 const placeOrder = async (req, res) => {
   try {
@@ -37,6 +37,9 @@ const placeOrder = async (req, res) => {
       },
       quantity: 1
     });
+
+    // Debug: Print the frontend_url being used for Stripe redirects
+    console.log("Stripe redirect will go to:", frontend_url);
 
     const session = await stripe.checkout.sessions.create({
       line_items,

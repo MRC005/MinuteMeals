@@ -4,7 +4,7 @@ import RecentOrders from '../../components/RecentOrders/RecentOrders'
 import { FaShoppingCart, FaUser, FaStore, FaRupeeSign } from 'react-icons/fa'
 import axios from 'axios'
 
-const API_BASE_URL = 'http://localhost:4000'
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
 export default function DashboardHome() {
   const [orders, setOrders] = useState([])
@@ -19,22 +19,30 @@ export default function DashboardHome() {
   useEffect(() => {
     async function fetchDashboardData() {
       try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          setStats({ ordersToday: 0, activeUsers: 0, restaurants: 0, revenue: 0 });
+          setOrders([]);
+          setLoading(false);
+          return;
+        }
         const [statsRes, ordersRes] = await Promise.all([
-          axios.get(`${API_BASE_URL}/api/dashboard/stats`),
+          axios.get(`${API_BASE_URL}/api/dashboard/stats`, {
+            headers: { Authorization: `Bearer ${token}` }
+          }),
           axios.get(`${API_BASE_URL}/api/order/list`)
-        ])
-        
-        if (statsRes.data.success) setStats(statsRes.data.data)
-        if (ordersRes.data.success) setOrders(ordersRes.data.data)
+        ]);
+        if (statsRes.data.success) setStats(statsRes.data.data);
+        if (ordersRes.data.success) setOrders(ordersRes.data.data);
       } catch (err) {
-        setStats({ ordersToday: 0, activeUsers: 0, restaurants: 0, revenue: 0 })
-        setOrders([])
+        setStats({ ordersToday: 0, activeUsers: 0, restaurants: 0, revenue: 0 });
+        setOrders([]);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
-    fetchDashboardData()
-  }, [])
+    fetchDashboardData();
+  }, []);
 
   return (
     <div style={{ padding: 24 }}>

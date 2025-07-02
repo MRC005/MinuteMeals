@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { assets } from '../../assets/assets';
 import './MyOrders.css';
 import { StoreContext } from '../../Context/StoreContext';
@@ -20,7 +20,7 @@ const MyOrders = () => {
     const fetchOrders = async () => {
         try {
             const response = await axios.post(`${url}/api/order/userorders`, {}, {
-                headers: { token },
+                headers: { Authorization: `Bearer ${token}` },
             });
             setData(response.data.data);
         } catch (error) {
@@ -51,7 +51,10 @@ const MyOrders = () => {
                             <div className="my-orders-info">
                                 <div className="my-orders-items">
                                     {order.items.map((item, idx) =>
-                                        <span key={idx}>{item.name} × {item.quantity}{idx < order.items.length - 1 ? ', ' : ''}</span>
+                                        <span key={idx}>
+                                            {item.name} x {item.quantity}
+                                            {idx < order.items.length - 1 ? ', ' : ''}
+                                        </span>
                                     )}
                                 </div>
                                 <div className="my-orders-meta">
@@ -61,11 +64,11 @@ const MyOrders = () => {
                                             : ""}
                                     </span>
                                     <span className="my-orders-status" style={{ color: statusColors[order.status?.toLowerCase()] || "#7F3FF7" }}>
-                                        ● <b>{order.status}</b>
+                                        &#9679; <b>{order.status}</b>
                                     </span>
                                 </div>
                             </div>
-                            <p className="my-orders-amount">₹{order.amount}</p>
+                            <p className="my-orders-amount">Rs {order.amount}</p>
                             <p className="my-orders-count">Items: {order.items.length}</p>
                         </div>
                     ))

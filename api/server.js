@@ -15,7 +15,24 @@ const app = express();
 
 connectDB();
 
-app.use(cors());
+const allowedOrigins = [
+  'http://localhost:5173',         
+  'https://your-frontend.onrender.com' // Your deployed frontend
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads/images', express.static(path.join(__dirname, 'uploads/images')));
@@ -31,7 +48,8 @@ app.get('/', (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-    res.status(500).json({ success: false, message: "Internal server error" });
+  console.error(err.stack);
+  res.status(500).json({ success: false, message: "Internal server error" });
 });
 
 const PORT = process.env.PORT || 4000;

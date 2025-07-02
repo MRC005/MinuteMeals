@@ -3,18 +3,16 @@ import { StoreContext } from '../../Context/StoreContext';
 import FoodItem from '../FoodItem/FoodItem';
 import './FoodDisplay.css';
 
-const FoodDisplay = ({ category }) => {
+const FoodDisplay = ({ category, location }) => {
   const { menu = [] } = useContext(StoreContext);
-
-  if (menu && menu.length > 0) {
-    console.log('menu item example:', menu[0]);
-  } else {
-    console.log('menu is empty or undefined:', menu);
-  }
 
   return (
     <div className='food-display' id='food-display'>
-      <h2>Top dishes near you</h2>
+      <h2>
+        Top dishes in {location && location !== 'Detecting location...' && location !== 'Location unavailable'
+          ? location
+          : 'your area'}
+      </h2>
       <div className='food-display-list'>
         {(menu || [])
           .filter(food => category === "All" || food.category === category)

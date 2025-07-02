@@ -15,9 +15,7 @@ const LoginPopup = ({ setShowLogin }) => {
   const popupRef = useRef(null)
 
   useEffect(() => {
-    // Focus the first input when popup opens
     popupRef.current && popupRef.current.focus()
-    // Allow closing with Escape key
     const handleEsc = (e) => {
       if (e.key === "Escape") setShowLogin(false)
     }
@@ -136,7 +134,7 @@ const LoginPopup = ({ setShowLogin }) => {
         <div className="login-popup-condition">
           <input type="checkbox" required id="terms" />
           <label htmlFor="terms">
-            By continuing, I agree to the <a href="https://faceprep.in/terms" target="_blank" rel="noopener noreferrer">terms</a> &amp; <a href="https://faceprep.in/privacy" target="_blank" rel="noopener noreferrer">privacy policy</a>.
+            By continuing, I agree to the <a href="https://www.247waiter.com/terms-and-conditions/" target="_blank" rel="noopener noreferrer">terms</a> &amp; <a href="https://faceprep.in/privacy" target="_blank" rel="noopener noreferrer">privacy policy</a>.
           </label>
         </div>
         {curState === "Log In"

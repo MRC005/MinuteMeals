@@ -1,8 +1,8 @@
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
-  'https://foodprep-1.onrender.com',
-  'https://foodprepuser.onrender.com'
+  // 'https://foodprep-1.onrender.com',
+  'https://minutemeals-1.onrender.com'
 ];
 
 const corsOptions = {

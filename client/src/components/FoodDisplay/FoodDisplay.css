@@ -44,9 +44,26 @@
     from { opacity: 0; transform: translateY(12px);}
     to { opacity: 1; transform: translateY(0);}
 }
-@media (max-width: 700px) {
+/* @media (max-width: 700px) {
     .food-display-list {
         gap: 18px 6px;
         row-gap: 28px;
+    }
+} */
+@media (max-width: 700px) {
+    .food-display-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px 4px;
+        row-gap: 14px;
+        margin-top: 18px;
+    }
+}
+
+@media (max-width: 420px) {
+    .food-display-list {
+        grid-template-columns: 1fr;
+        gap: 8px 0;
+        row-gap: 10px;
     }
 }

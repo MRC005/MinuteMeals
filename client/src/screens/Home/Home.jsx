@@ -5,13 +5,14 @@ import ExploreMenu from '../../components/ExploreMenu/ExploreMenu'
 import FoodDisplay from '../../components/FoodDisplay/FoodDisplay'
 
 const Home = () => {
-    const [category,setCategory] = useState("All");
+    const [category, setCategory] = useState("All");
+    const [locationName, setLocationName] = useState('Detecting location...');
 
     return (
         <div>
-            <Header />
+            <Header setLocation={setLocationName} />
             <ExploreMenu category={category} setCategory={setCategory} />
-            <FoodDisplay category={category} />
+            <FoodDisplay category={category} location={locationName} />
         </div>
     )
 }
