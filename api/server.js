@@ -16,14 +16,15 @@ const app = express();
 connectDB();
 
 const allowedOrigins = [
-  'http://localhost:5173',         
-  'https://your-frontend.onrender.com' // Your deployed frontend
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'https://minutemeals-client.onrender.com',
+  'https://minutemeals-dashboard.onrender.com'
 ];
 
-app.use(cors({
+const corsOptions = {
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
-    
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -31,7 +32,10 @@ app.use(cors({
     }
   },
   credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
